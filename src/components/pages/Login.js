@@ -11,9 +11,8 @@ function Login(){
 
     function handleSubmit(e){
       e.preventDefault();
-      if (username === 'Elias' && password === '123') {
-        console.log('Usuario e senha corretos')
-        console.log({username},{password})
+      if (username === 'Admin' && password === 'Admin') {
+        console.log('Usuário e senha corretos')
         navigate("/times")
         
       } else {

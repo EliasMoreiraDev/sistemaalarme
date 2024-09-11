@@ -11,7 +11,7 @@ function NavBar(){
             <div className={styles.titulo}>Sistema de Controle de Alarmes</div>
                 
                 <Link to='/'>
-                        <img src={logo} alt='Costs' className={styles.logo}/>
+                        <img src={logo} alt='IFRO' className={styles.logo}/>
                     </Link>
             
         </nav>

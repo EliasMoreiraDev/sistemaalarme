@@ -1,63 +1,53 @@
+import styles from "./TimeCard.module.css";
+import { BsPencil, BsFillTrashFill } from "react-icons/bs";
+import ToggleSwitch from "../layouts/ToggleSwitch";
+import Projeto from "../pages/Alarm";
+import { useState } from "react";
+import Confirmacao from "../layouts/Confirmacao";
 
-import styles from './TimeCard.module.css'
-import {BsPencil, BsFillTrashFill} from 'react-icons/bs'
-import ToggleSwitch from '../layouts/ToggleSwitch'
-import Alarm from '../pages/Alarm'
-import {useState} from 'react'
-import Confirmacao from '../layouts/Confirmacao'
+function TimeCard({ id, time, handleRemove }) {
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [isModalConfOpen, setIsModalConfOpen] = useState(false);
+  const [currentAlarmTime, setCurrentAlarmTime] = useState(time);
 
+  const toggleModalEdit = () => setIsModalEditOpen((prev) => !prev);
+  const toggleModalConf = () => setIsModalConfOpen((prev) => !prev);
 
-function TimeCard({id, time, handleRemove}){
-    
-    const remove = (e) =>{
-        e.preventDefault()
-        handleRemove(id)
-    }
-    const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const remove = (e) => {
+    e.preventDefault();
+    handleRemove(id);
+  };
 
-    const openModalEdit = () => {
-      setIsModalEditOpen(true);
-    };
-    function closeModalEdit(){
-        setIsModalEditOpen(false);
-    }
+  const handleUpdate = (updatedAlarm) => {
+    setCurrentAlarmTime(updatedAlarm.time);
+  };
 
-    const [isModalConfOpen, setIsModalConfOpen] = useState(false);
+  return (
+    <div className={styles.container_card}>
+      <Projeto isOpen={isModalEditOpen} onClose={toggleModalEdit} id={id} onUpdate={handleUpdate} />
 
-    const openModalConf = () => {
-      setIsModalConfOpen(true);
-    };
-    function closeModalConf(){
-        setIsModalConfOpen(false);
-    }
-    
-    
-    return(
-        <div className={styles.container_card}>
+      <Confirmacao
+        isOpen={isModalConfOpen}
+        onClose={toggleModalConf}
+        onConfirm={remove}
+        text="Deseja remover o alarme?"
+      />
 
-            <Alarm isOpen={isModalEditOpen} onClose={closeModalEdit} id={id}/>
+      <div className={styles.project_card}>
+        <ToggleSwitch id={id} />
 
-            <Confirmacao isOpen={isModalConfOpen} onClose={closeModalConf} onConfirm={remove} text={"Deseja excluir o horário?"}/>
-            <div className={styles.project_card}>
-
-                 <ToggleSwitch id={id}/> 
-
-                <h1  className={styles.category_text}>
-                    {time}
-                </h1>
-                <div className={styles.project_card_actions}>
-                    <button onClick={openModalEdit} className={styles.button_edit}>
-                        <BsPencil/> Editar     
-                    </button>
-                    <button onClick={openModalConf} className={styles.button_remove}>
-                        <BsFillTrashFill/> Excluir
-                    </button>
-                </div>
-                
-            </div>
-            
+        <h1 className={styles.category_text}>{currentAlarmTime}</h1> {/* Usa o estado atualizado */}
+        <div className={styles.project_card_actions}>
+          <button onClick={toggleModalEdit} className={styles.button_edit}>
+            <BsPencil /> Editar
+          </button>
+          <button onClick={toggleModalConf} className={styles.button_remove}>
+            <BsFillTrashFill /> Excluir
+          </button>
         </div>
-        
-    )
+      </div>
+    </div>
+  );
 }
-export default TimeCard
+
+export default TimeCard;

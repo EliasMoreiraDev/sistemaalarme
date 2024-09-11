@@ -15,7 +15,7 @@ function App() {
        <NavBar/>
          <Container customClass='min-heigth'>
            <Routes>
-              <Route exact path='/ProjetoSirene' element={<Login/>}/>
+              <Route exact path='/login' element={<Login/>}/>
               <Route exact path='/newTime'  element={<NewTime/>}/>
               <Route exact path='/times'  element={<Time/>}/>
               <Route exact path='/time/:id' element={<Alarm/>}/>

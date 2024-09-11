@@ -38,9 +38,9 @@
   ],
   "alarms": [
     {
-      "time": "12:55",
+      "time": "16:00",
       "ativo": false,
-      "id": 1
+      "id": 8
     }
   ]
 }
