@@ -10,7 +10,7 @@ function Projeto({ isOpen, onClose, id, onUpdate }) {
   useEffect(() => {
     let isMounted = true;
 
-    fetch(`http://localhost:5000/alarms/${id}`, {
+    fetch(`http://192.168.2.27:5000/alarms/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ function Projeto({ isOpen, onClose, id, onUpdate }) {
   function editPost(alarm) {
     setMessage('');
 
-    fetch(`http://192.168.2.37:5000/alarms/${alarm.id}`, {
+    fetch(`http://192.168.2.27:5000/alarms/${alarm.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

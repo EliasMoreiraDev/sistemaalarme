@@ -6,7 +6,7 @@ function NewTime({ isOpen, onClose, addTime }) {
   const navigate = useNavigate();
 
   function createPost(alarm) {
-    fetch('http://192.168.2.37:5000/alarms', {
+    fetch('http://192.168.2.27:5000/alarms', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',

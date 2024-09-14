@@ -1,5 +1,6 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import useSuapClient from '../../login_suap/client';
 import Message from "../layouts/Message";
 import styles from './Time.module.css';
 import Container from '../layouts/Container';
@@ -17,19 +18,44 @@ function Time() {
   const [timeMessage, setTimeMessage] = useState('');
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isModalConfOpen, setIsModalConfOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
-  const location = useLocation();
   let message = '';
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  if (location.state?.message && !timeMessage) {
-    message = location.state.message;
-    setTimeMessage(message);
-    window.history.replaceState({}, document.title);
-  }
+
+  const clientID = 'S3uUVTw2uvD0hixw0zsrJxlNJt8aWIPXU70LhtYH';
+  const redirectURI = 'http://localhost:3000/times';
+  const authHost = 'https://suap.ifro.edu.br';
+  const scope = 'identificacao email documentos_pessoais';
+
+  const { initToken, isAuthenticated, getResource, logout } = useSuapClient(authHost, clientID, redirectURI, scope);
 
   useEffect(() => {
+    const tokenInfo = initToken();
+
+    if (tokenInfo.tokenValue) {
+      getResource((data) => {
+        if (data.tipo_usuario === 'Aluno' && data.identificacao !== '2022103030076') {
+          alert('Você não tem acesso a esta área.');
+          logout();
+          navigate('/');
+        } else {
+          setUserInfo(data);
+          fetchTimes();
+        }
+      });
+    } else {
+      if (!isAuthenticated()) {
+        navigate('/login');
+      }
+    }
+  }, [initToken, isAuthenticated, getResource, logout, navigate]);
+
+  const fetchTimes = () => {
     setTimeout(() => {
-      fetch('http://192.168.2.37:5000/alarms', {
+      fetch('http://192.168.2.27:5000/alarms', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -42,10 +68,10 @@ function Time() {
         })
         .catch((err) => console.log(err));
     }, 1500);
-  }, []);
+  };
 
   function removeTime(id) {
-    fetch(`http://192.168.2.37:5000/alarms/${id}`, {
+    fetch(`http://192.168.2.27:5000/alarms/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -69,6 +95,10 @@ function Time() {
   const addTime = (newTime) => {
     setTimes((prevTimes) => [...prevTimes, newTime]);
   };
+
+  if (!userInfo) {
+    return  
+  }
 
   return (
     <div className={styles.project_container}>
